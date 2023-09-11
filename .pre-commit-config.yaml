@@ -39,23 +39,23 @@ repos:
     language: system
     types: [python]
     args: [--in-place, --remove-all-unused-imports, --remove-duplicate-keys, -r, -v, "--exclude venv", .]
-#
-#  - id: isort
-#    name: isort
-#    entry: isort
-#    language: system
-#    types: [python]
-#    args:
-#    - "."
-#
-#  - id: flake8
-#    name: Check with Flake8
-#    entry: flake8
-#    language: system
-#    pass_filenames: false
-#    types: [python]
-#    args: [--count, .]
-#
+
+  - id: isort
+    name: isort
+    entry: isort
+    language: system
+    types: [python]
+    args:
+    - "."
+
+  - id: flake8
+    name: Check with Flake8
+    entry: flake8
+    language: system
+    pass_filenames: false
+    types: [python]
+    args: [--count, .]
+
 #  - id: mypy
 #    name: Validate types with MyPy
 #    entry: mypy .
