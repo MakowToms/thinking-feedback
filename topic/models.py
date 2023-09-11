@@ -1,10 +1,7 @@
-from django.conf import settings
-from django.contrib.auth import get_user, get_user_model
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 from django.db import models
-from django.db.models.fields.related import RelatedField
-from django.db.models.signals import post_delete, pre_save
-from django.shortcuts import get_object_or_404
+from django.db.models.signals import post_delete
 
 # Create your models here.
 from users.models import Stage

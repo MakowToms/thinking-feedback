@@ -1,13 +1,14 @@
 from django import forms
-from django.contrib import admin
-from django.contrib.auth.forms import (PasswordChangeForm, PasswordResetForm,
-                                       SetPasswordForm, UserCreationForm)
+from django.contrib.auth.forms import (
+    PasswordChangeForm, PasswordResetForm,
+    SetPasswordForm,
+)
 from django.contrib.auth.models import User
 
 
 class PasswordChangingForm(PasswordChangeForm):
     old_password = forms.CharField(
-        widget=forms.PasswordInput(attrs={"class": "form-control", "type": "password"})
+        widget=forms.PasswordInput(attrs={"class": "form-control", "type": "password"}),
     )
     new_password1 = forms.CharField(
         max_length=100,
@@ -52,6 +53,6 @@ class PasswordResettingForm(PasswordResetForm):
                 "placeholder": "Your email",
                 "type": "email",
                 "name": "email",
-            }
+            },
         ),
     )

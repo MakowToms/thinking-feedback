@@ -1,22 +1,26 @@
 # Create your views here.
 from django.contrib import messages
-from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.hashers import check_password
-from django.contrib.auth.views import (PasswordChangeView,
-                                       PasswordResetConfirmView,
-                                       PasswordResetDoneView)
+from django.contrib.auth.views import (
+    PasswordChangeView,
+    PasswordResetConfirmView,
+    PasswordResetDoneView,
+)
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 
 from topic.forms import SignUpForm, UpdateForm
 from users.models import Your_Stage
 
-from .decorators import (authentication_not_required, email_required,
-                         new_password_required)
-from .forms import (PasswordChangingForm, PasswordResettingForm,
-                    PasswordSettingForm)
+from .decorators import (
+    authentication_not_required, email_required,
+    new_password_required,
+)
+from .forms import (
+    PasswordChangingForm, PasswordResettingForm,
+    PasswordSettingForm,
+)
 
 
 @email_required
@@ -41,7 +45,7 @@ def login_page(request):
                 return redirect("/")
             else:
                 messages.success(
-                    request, message="There was an error logging in. Try again"
+                    request, message="There was an error logging in. Try again",
                 )
                 return redirect("/login")
         else:

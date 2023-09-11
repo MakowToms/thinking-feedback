@@ -1,21 +1,14 @@
-from django import forms
-from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
-from django.contrib.auth import authenticate, get_user_model, login
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 
 # Create your views here.
 from topic.models import Grade, Skill, Topic
-from users.forms import (PasswordChangingForm, PasswordResettingForm,
-                         PasswordSettingForm)
-from users.models import Initial_Password, Stage, Your_Stage
-from users.views import home_page
+from users.models import Stage, Your_Stage
 
-from .forms import (SignUpForm, SkillModelForm, StageEditForm, StudentForm,
-                    TopicModelForm, UpdateForm)
+from .forms import (
+    SkillModelForm, TopicModelForm,
+)
 
 # from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm, PasswordResetForm
 
@@ -182,7 +175,7 @@ def skill_grade_edit_next(request, pk1, pk2, level):
             request,
             "base.html",
             {
-                "content": "Oh, there seems that there are no grades within this skill and level!"
+                "content": "Oh, there seems that there are no grades within this skill and level!",
             },
         )
 
@@ -245,7 +238,7 @@ def skill_grade_delete_next(request, pk1, pk2, level):
             request,
             "base.html",
             {
-                "content": "Oh, there seems that there are no grades within this skill and level!"
+                "content": "Oh, there seems that there are no grades within this skill and level!",
             },
         )
 

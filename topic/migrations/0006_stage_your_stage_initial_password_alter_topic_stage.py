@@ -100,7 +100,7 @@ class Migration(migrations.Migration):
             model_name="topic",
             name="stage",
             field=models.ForeignKey(
-                default=1, on_delete=django.db.models.deletion.CASCADE, to="topic.stage"
+                default=1, on_delete=django.db.models.deletion.CASCADE, to="topic.stage",
             ),
             preserve_default=False,
         ),

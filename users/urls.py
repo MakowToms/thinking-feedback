@@ -3,9 +3,11 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.urls import include, path
 
 from .forms import PasswordResettingForm
-from .views import (PasswordResettingView, PasswordsChangeView,
-                    PasswordSettingView, home_page, login_page, logout_page,
-                    password_success, register, update_user)
+from .views import (
+    PasswordsChangeView, PasswordSettingView,
+    home_page, login_page, logout_page, password_success,
+    register, update_user,
+)
 
 urlpatterns = [
     path("", home_page, name="home"),
@@ -19,14 +21,14 @@ urlpatterns = [
     path(
         "reset_password/",
         auth_views.PasswordResetView.as_view(
-            template_name="password_reset.html", form_class=PasswordResettingForm
+            template_name="password_reset.html", form_class=PasswordResettingForm,
         ),
         name="reset_password",
     ),
     path(
         "reset_password_sent/",
         auth_views.PasswordResetDoneView.as_view(
-            template_name="password_reset_sent.html"
+            template_name="password_reset_sent.html",
         ),
         name="password_reset_done",
     ),
@@ -38,7 +40,7 @@ urlpatterns = [
     path(
         "reset_password_complete/",
         auth_views.PasswordResetCompleteView.as_view(
-            template_name="password_reset_done.html"
+            template_name="password_reset_done.html",
         ),
         name="password_reset_complete",
     ),

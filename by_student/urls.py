@@ -1,7 +1,9 @@
-from django.urls import include, path
+from django.urls import path
 
-from .views import (by_student, by_student_edit, by_student_pick_topic,
-                    by_student_update, by_student_view)
+from .views import (
+    by_student, by_student_edit, by_student_pick_topic,
+    by_student_update, by_student_view,
+)
 
 urlpatterns = [
     path("", by_student),

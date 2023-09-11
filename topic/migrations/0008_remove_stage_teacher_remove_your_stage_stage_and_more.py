@@ -27,7 +27,7 @@ class Migration(migrations.Migration):
             model_name="topic",
             name="stage",
             field=models.ForeignKey(
-                on_delete=django.db.models.deletion.CASCADE, to="users.stage"
+                on_delete=django.db.models.deletion.CASCADE, to="users.stage",
             ),
         ),
         migrations.DeleteModel(

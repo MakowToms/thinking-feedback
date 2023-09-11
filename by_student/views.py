@@ -125,7 +125,7 @@ def by_student_edit(request, pk1, pk2):
                 skill = Skill.objects.get(topic=obj, pk=skill_pk)
                 level = key[-1]
                 grade = Grade.objects.filter(
-                    student=student, skill=skill, level=level
+                    student=student, skill=skill, level=level,
                 ).last()
                 if value == "empty":
                     grade.delete()

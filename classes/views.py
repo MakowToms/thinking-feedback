@@ -170,7 +170,7 @@ def add_class_next(request, pk):
                     username = first_name + str(counter)
                     counter += 1
                 student = User.objects.create_user(
-                    username=username, first_name=first_name, last_name=last_name
+                    username=username, first_name=first_name, last_name=last_name,
                 )
                 student.save()
                 password = User.objects.make_random_password()
