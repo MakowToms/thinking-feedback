@@ -56,11 +56,11 @@ repos:
     types: [python]
     args: [--count, .]
 
-#  - id: mypy
-#    name: Validate types with MyPy
-#    entry: mypy .
-#    language: system
-#    types: [python]
-#    pass_filenames: false
-#    args:
-#    - "."
+  - id: mypy
+    name: Validate types with MyPy
+    entry: mypy .
+    language: system
+    types: [python]
+    pass_filenames: false
+    args:
+    - "."
