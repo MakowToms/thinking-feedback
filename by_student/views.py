@@ -48,7 +48,7 @@ def by_student_view(request, pk1, pk2):
         "skill_list": skill_list,
         "student": student,
         "topic": obj.title,
-    }  #'slug': slug,
+    }
     grades = {}
     student = User.objects.get(pk=pk1)
     for skill in skill_list:
@@ -58,7 +58,6 @@ def by_student_view(request, pk1, pk2):
             temp = Grade.objects.filter(student=student, skill=skill, level=level)
             for grade in temp:
                 grades[skill][level].append(grade)
-    # print(grades)
     context["grades"] = grades
     template_name = "by_student_view.html"
     return render(request, template_name, context)

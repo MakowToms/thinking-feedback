@@ -27,9 +27,10 @@ repos:
   hooks:
   - id: black
     name: Format with Black
-    entry: black .
+    entry: black
     language: system
     types: [python]
+    files: ^venv/
     args:
     - "."
 
@@ -38,13 +39,15 @@ repos:
     entry: autoflake
     language: system
     types: [python]
-    args: [--in-place, --remove-all-unused-imports, --remove-duplicate-keys, -r, -v, "--exclude venv", .]
+    files: ^venv/
+    args: [--in-place, --remove-all-unused-imports, --remove-duplicate-keys, -r, -v, .]
 
   - id: isort
     name: isort
     entry: isort
     language: system
     types: [python]
+    files: ^venv/
     args:
     - "."
 
@@ -54,13 +57,15 @@ repos:
     language: system
     pass_filenames: false
     types: [python]
+    files: ^venv/
     args: [--count, .]
 
   - id: mypy
     name: Validate types with MyPy
-    entry: mypy .
+    entry: mypy
     language: system
     types: [python]
+    files: ^venv/
     pass_filenames: false
     args:
     - "."
