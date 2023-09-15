@@ -1,4 +1,5 @@
 from django.contrib.admin.views.decorators import staff_member_required
+from django.forms import ModelMultipleChoiceField
 from django.shortcuts import get_object_or_404, redirect, render
 
 # Create your views here.
@@ -6,7 +7,7 @@ from topic.models import Skill, Topic, SkillLevel
 from classes.models import Stage
 
 from .forms import (
-    SkillModelForm, TopicModelForm, SkillLevelModelForm,
+    SkillModelForm, TopicModelForm, SkillLevelModelForm, SkillLevelNewSkillModelForm,
 )
 
 # from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm, PasswordResetForm
@@ -100,6 +101,22 @@ def add_skill_level(request, pk1, pk2):
 
 
 @staff_member_required
+def add_skill_to_skill_level(request, pk1, pk3):
+    topic = get_object_or_404(Topic, pk=pk1)
+    skill_level = get_object_or_404(SkillLevel, pk=pk3)
+    form = SkillLevelNewSkillModelForm(topic, request.POST or None, instance=skill_level)
+    if form.is_valid():
+        skill_level = get_object_or_404(SkillLevel, pk=pk3)
+        for skill in form.cleaned_data["skills"]:
+            skill_level.skills.add(skill)
+        skill_level.save()
+        return redirect("../../..")
+    template_name = "form.html"
+    context = {"form": form}
+    return render(request, template_name, context)
+
+
+@staff_member_required
 def update_topic(request, pk):
     user = request.user
     stages = Stage.objects.filter(teacher=request.user)
@@ -130,7 +147,7 @@ def delete_topic(request, pk):
 
 
 @staff_member_required
-def skill_edit(request, pk1, pk2):
+def update_skill(request, pk1, pk2):
     stages = Stage.objects.filter(teacher=request.user)
     topic = get_object_or_404(Topic, pk=pk1, stage__in=stages)
     skill = get_object_or_404(Skill, pk=pk2)
@@ -139,20 +156,45 @@ def skill_edit(request, pk1, pk2):
         obj = form.save(commit=False)
         obj.topic = topic
         obj.save()
-        return redirect(f"../../{obj.pk}")
+        return redirect(f"../../../")
     template_name = "form.html"
     context = {"form": form}
     return render(request, template_name, context)
 
 
 @staff_member_required
-def skill_delete(request, pk1, pk2):
+def delete_skill(request, pk1, pk2):
     stages = Stage.objects.filter(teacher=request.user)
     topic = get_object_or_404(Topic, pk=pk1, stage__in=stages)
     skill = get_object_or_404(Skill, pk=pk2)
     if request.method == "POST":
         skill.delete()
-        return redirect("../../..")
+        return redirect("../../../")
     template_name = "delete_skill.html"
     context = {"skill": skill}
+    return render(request, template_name, context)
+
+
+@staff_member_required
+def update_skill_level(request, pk1, pk3):
+    skill_level = get_object_or_404(SkillLevel, pk=pk3)
+    form = SkillLevelModelForm(request.POST or None, instance=skill_level)
+    if form.is_valid():
+        skill_level_edit = form.save(commit=False)
+        # skill_level_edit.skills = skill_level.skills
+        skill_level_edit.save()
+        return redirect(f"../../../")
+    template_name = "form.html"
+    context = {"form": form}
+    return render(request, template_name, context)
+
+
+@staff_member_required
+def delete_skill_level(request, pk1, pk3):
+    skill_level = get_object_or_404(SkillLevel, pk=pk3)
+    if request.method == "POST":
+        skill_level.delete()
+        return redirect("../../../")
+    template_name = "delete_skill.html"
+    context = {"skill_level": skill_level}
     return render(request, template_name, context)

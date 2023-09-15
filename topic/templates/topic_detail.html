@@ -16,16 +16,31 @@
       {% for skill, levels in skills %}
         <tr>
           <td>{{ skill.title }}</td>
-          <td>{% for level in levels.chill %} {{ level.description }} {% endfor %}</td>
+          <td class="inner-table">
+            <table>
+              <tr>
+                {% for level in levels.chill %}
+                  <td>
+                    {{ level.description }}
+                    <a href = '{{ level.get_add_skill_to_skill_level_url }}'> Add new skill</a>
+                    <a href = '{{ level.get_edit_url }}'> Edit</a>
+                    <a href = '{{ level.get_delete_url }}'> Delete</a>
+                  </td>
+                {% endfor %}
+              </tr>
+            </table>
+          </td>
           <td>{% for level in levels.medium %} {{ level.description }} {% endfor %}</td>
           <td>{% for level in levels.challenge %} {{ level.description }} {% endfor %}</td>
-          <td>
-              <li>
-                  <a href = '{{ skill.get_absolute_url }}'> Add grades: {{ skill.title }}</a>
-              </li>
-              <li>
-                  <a href = '{{ skill.get_add_skill_level_url }}'> Add skill level for {{ skill.title }}</a>
-              </li>
+          <td class="inner-table">
+            <table>
+              <tr>
+{#                <td><a href = '{{ skill.get_absolute_url }}'> Add grades: {{ skill.title }}</a></td>#}
+                <td><a href = '{{ skill.get_add_skill_level_url }}'> Add skill level for {{ skill.title }}</a></td>
+                <td><a href = '{{ skill.get_edit_url }}'> Edit {{ skill.title }}</a></td>
+                <td><a href = '{{ skill.get_delete_url }}'> Delete {{ skill.title }}</a></td>
+              </tr>
+            </table>
           </td>
         </tr>
       {% endfor %}

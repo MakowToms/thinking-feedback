@@ -20,6 +20,16 @@ class SkillModelForm(forms.ModelForm):
         fields = ["title"]
 
 
+class SkillLevelNewSkillModelForm(forms.ModelForm):
+    class Meta:
+        model = SkillLevel
+        fields = ["skills"]
+
+    def __init__(self, topic, *args, **kwargs):
+        super(SkillLevelNewSkillModelForm, self).__init__(*args, **kwargs)
+        self.fields["skills"].queryset = Skill.objects.filter(topic=topic)
+
+
 class SkillLevelModelForm(forms.ModelForm):
     class Meta:
         model = SkillLevel

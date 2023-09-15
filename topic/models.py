@@ -67,6 +67,15 @@ class SkillLevel(models.Model):
     tasks = models.ManyToManyField(Task, related_name="skill_levels")
     generators = models.ManyToManyField(TaskGenerator, related_name="skill_levels")
 
+    def get_add_skill_to_skill_level_url(self):
+        return f"/topic/{self.skills.all()[0].topic.pk}/skill_level/{self.pk}/add_skill_to_skill_level"
+
+    def get_edit_url(self):
+        return f"/topic/{self.skills.all()[0].topic.pk}/skill_level/{self.pk}/edit"
+
+    def get_delete_url(self):
+        return f"/topic/{self.skills.all()[0].topic.pk}/skill_level/{self.pk}/delete"
+
 
 # What happens here??
 def delete_students(sender, instance, **kwargs):
