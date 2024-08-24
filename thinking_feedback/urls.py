@@ -23,6 +23,7 @@ urlpatterns = [
     path("your_classes/", include("classes.urls")),
     path("student/", include("student_view.urls")),
     path("by_student/", include("by_student.urls")),
+    path("all_tables/", include("all_tables.urls")),
     path("topic/", include("topic.urls")),
     path("topic/", include("task.urls")),
     path("grade/", include("grade.urls")),

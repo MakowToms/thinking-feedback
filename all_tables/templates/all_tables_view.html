@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+
+
+{% block content %}
+    <style>
+        table, th, td {
+        border:1px solid black;
+        }
+        th {text-align: center}
+
+    </style>
+    <h3>{{ stage.title }}</h3>
+    <h4>Oceny</h4>
+
+    <button title="Pokaż/ukryj tabele" type="button" onclick="clickAll('grades-button')" class="grades-button-manager">Pokaż/ukryj tabele</button> <br>
+    <button title="Pokaż/ukryj Librusa" type="button" onclick="clickAll('table-button')" class="table-button-manager">Pokaż/ukryj Librusa</button> <br>
+    {% for student, student_data in data.items %}
+      {{ student.get_full_name }}
+      <button title="Pokaż/ukryj" type="button" onclick="spoiler('grades-{{ student.pk }}')" class="grades-button">Tabele</button>
+      <button title="Pokaż/ukryj" type="button" onclick="spoiler('table-{{ student.pk }}')" class="table-button">Librus</button>
+      <button onclick="copyText('table-{{ student.pk }}')">Skopiuj Librus</button>
+      <table border=1 style="width:100%; display:none" id="grades-{{ student.pk }}">
+          <tr>
+              <th width="25%"></th>
+              <th width="25%">Podstawowy</th>
+              <th width="25%">Średniozaawansowany</th>
+              <th>Zaawansowany</th>
+          </tr>
+          {% for skill_title, skill_grades in student_data.grades.items %}
+          <tr>
+              <td>{{ skill_title }}</td>
+              {% for level, grades in skill_grades.items %}
+                  <td>
+                      {% for grade in grades %}
+                          <span  title="{{ grade }}">
+                           {{ grade }}
+                          </span>
+                      {% endfor %}
+                  </td>
+              {% endfor %}
+          </tr>
+          {% endfor %}
+
+      </table>
+      <textarea rows="15" cols="100" style="display: none" id="table-{{ student.pk }}">{{ student_data.table }}</textarea>
+      <br>
+    {% endfor %}
+{% endblock %}
+
