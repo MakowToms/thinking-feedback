@@ -1,10 +1,8 @@
 {% extends "base.html" %}
 
+
+
 {% block content %}
-    <h2>Do you want to add grades? <a href="./update/">Yes</a></h2>
-    <br>
-    <h2>Do you want to edit latest grades? <a href="./edit/">Yes</a></h2>
-    <br>
     <style>
         table, th, td {
         border:1px solid black;
@@ -12,30 +10,31 @@
         th {text-align: center}
 
     </style>
-    <h3>{{ student.first_name }} {{ student.last_name }}</h3>
-    {% for topic, topic_grades in grades.items %}
-      <h4>{{ topic }} </h4>
-      <table border=1 style="width:100%" >
+    <h3>{{ student.get_full_name }}</h3>
+    <h4>Oceny</h4>
+
+    <button title="Pokaż/ukryj tabele" type="button" onclick="clickAll('grades-button')" class="grades-button-manager">Pokaż/ukryj tabele</button> <br>
+    <button title="Pokaż/ukryj Librusa" type="button" onclick="clickAll('table-button')" class="table-button-manager">Pokaż/ukryj Librusa</button> <br>
+    {% for topic, topic_data in data.items %}
+      {{ topic }}
+      <button title="Pokaż/ukryj" type="button" onclick="spoiler('grades-{{ topic }}')" class="grades-button">Tabele</button>
+      <button title="Pokaż/ukryj" type="button" onclick="spoiler('table-{{ topic }}')" class="table-button">Librus</button>
+      <button onclick="copyText('table-{{ topic }}')">Skopiuj Librus</button>
+      <table border=1 style="width:100%; display:none" id="grades-{{ topic }}">
           <tr>
               <th width="25%"></th>
               <th width="25%">Podstawowy</th>
               <th width="25%">Średniozaawansowany</th>
               <th>Zaawansowany</th>
           </tr>
-          {% for skill, skill_grades in topic_grades.items %}
+          {% for skill_title, skill_grades in topic_data.grades.items %}
           <tr>
-              <td>{{ skill.title }}</td>
-              {% for level_grades in skill_grades %}
+              <td>{{ skill_title }}</td>
+              {% for level, grades in skill_grades.items %}
                   <td>
-                      {% for grade in level_grades %}
+                      {% for grade in grades %}
                           <span  title="{{ grade }}">
-                              {% if grade.value == 'tick' %}
-                                  ✓
-                              {% elif grade.value == 'cross' %}
-                                  ☓
-                              {% else %}
-                                  {{ grade.value }}
-                              {% endif %}
+                           {{ grade }}
                           </span>
                       {% endfor %}
                   </td>
@@ -44,7 +43,11 @@
           {% endfor %}
 
       </table>
+      <textarea rows="15" cols="100" style="display: none" id="table-{{ topic }}">{{ topic_data.table }}</textarea>
+      <br>
     {% endfor %}
-  <textarea rows="15" cols="100">{{ table }}</textarea>
-    <br><br>
+    <button title="Pokaż/ukryj" type="button" onclick="spoiler('big-table')" class="table-button">Librus</button>
+    <button onclick="copyText('big-table')">Skopiuj Librus</button>
+    <textarea rows="15" cols="100" style="display: none" id="big-table">{{ all_table }}</textarea>
+
 {% endblock %}
