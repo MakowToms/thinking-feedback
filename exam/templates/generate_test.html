@@ -4,12 +4,14 @@
 
 <label>
   Wygenerowany sprawdzian - wklej do generatora Latex:
-  <textarea rows="16" cols="80">{{ test_str }}</textarea>
+  <button onclick="copyText('test')">Skopiuj sprawdzian</button>
+  <textarea rows="16" cols="80" id="test">{{ test_str }}</textarea>
 </label>
 
 <label>
   Wygenerowane odpowiedzi - wklej do generatora Latex:
-  <textarea rows="16" cols="80">{{ answers_str }}</textarea>
+  <button onclick="copyText('answers')">Skopiuj odpowiedzi</button>
+  <textarea rows="16" cols="80" id="answers">{{ answers_str }}</textarea>
 </label>
 
 {% endblock %}
