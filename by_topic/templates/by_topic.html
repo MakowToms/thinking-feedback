@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+    Pick a student:
+    {% for stage, topics in stages_to_topics.items %}
+        <h3>{{stage}}</h3>
+        {% for topic in topics %}
+            <li><a href="./{{ topic.pk }}">{{topic.title}}</a></li>
+        {% endfor %}
+        <br>
+    {% endfor %}
+    {% if empty %}
+    <br><br>
+        Oh! It seems that you need to add classes ('Your classes' section) to be able to have students.<br>
+    {% endif %}
+
+{% endblock %}
