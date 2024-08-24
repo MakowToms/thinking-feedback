@@ -19,8 +19,8 @@ def choose_stage(request):
     if form.is_valid():
         stage = form.cleaned_data["stage"]
 
-        tests = Test.objects.filter(stage__teacher=request.user)
-        student_tests = StudentTest.objects.filter(stage__teacher=request.user)
+        tests = Test.objects.filter(stage__teacher=request.user, stage=stage)
+        student_tests = StudentTest.objects.filter(stage__teacher=request.user, stage=stage)
         students = User.objects.filter(classes__teacher=request.user)
         skills = Skill.objects.filter(topic__stage=stage)
 
