@@ -31,7 +31,7 @@ class StageTopicsStudentsForm(forms.Form):
         self.fields["stage"].queryset = Stage.objects.filter(id=stage.pk)
         self.fields["stage"].initial = stage
         self.fields["skills"].queryset = Skill.objects.filter(topic__stage_id=stage.pk)
-        self.fields["students"].queryset = stage.students
+        self.fields["students"].queryset = stage.students.order_by('last_name').all()
 
 
 class StageTestForm(forms.Form):

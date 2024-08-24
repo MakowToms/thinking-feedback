@@ -107,7 +107,7 @@ def choose_test(request, pk):
     if request.POST and form.is_valid():
         test = form.cleaned_data["test"]
         skills = test.skills.all()
-        students = stage.students.all()
+        students = stage.students.order_by('last_name').all()
         marks = MARK_CHOICES
         types = TYPE_CHOICES
         return add_grades(request, stage, students, marks, types, "test", skills=skills, test=test)
@@ -125,7 +125,7 @@ def choose_student_test(request, pk):
     if request.POST and form.is_valid():
         student_test = form.cleaned_data["student_test"]
         skill_levels = student_test.skill_levels.all()
-        students = stage.students.all()
+        students = stage.students.order_by('last_name').all()
         marks = MARK_CHOICES
         types = TYPE_CHOICES
         return add_grades(request, stage, students, marks, types, "student_test", skill_levels=skill_levels, student_test=student_test)
@@ -143,14 +143,14 @@ def add_grades(request, stage, students, marks, types, grade_type, skills=None, 
     if skills is not None:
         for skill in skills:
             for level in skill.levels.all():
-                topic_to_skills_to_skill_levels[skill.topic.title][(skill.title, skill.order)].append(level)
+                topic_to_skills_to_skill_levels[(skill.topic.title, skill.topic.pk)][(skill.title, skill.order)].append(level)
     if skill_levels is not None:
         for level in skill_levels:
             skill = Skill.objects.filter(levels__id=level.pk).first()
-            topic_to_skills_to_skill_levels[skill.topic.title][(skill.title, skill.order)].append(level)
+            topic_to_skills_to_skill_levels[(skill.topic.title, skill.topic.pk)][(skill.title, skill.order)].append(level)
     topic_to_skills_to_skill_levels = {
         topic: {skill: levels for (skill, order), levels in sorted(skills.items(), key=lambda k: k[0][1])}
-        for topic, skills in topic_to_skills_to_skill_levels.items()
+        for (topic, topic_pk), skills in sorted(topic_to_skills_to_skill_levels.items(), key=lambda k: k[0][1])
     }
     if test is not None:
         grades = Grade.objects.filter(test_id=test.pk)

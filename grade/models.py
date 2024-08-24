@@ -1,3 +1,5 @@
+import datetime
+
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -18,9 +20,29 @@ class Grade(models.Model):
         default=1,
     )
     comment = models.CharField(max_length=200)
-    publish_date = models.DateTimeField(auto_now_add=True)
+    publish_date = models.DateTimeField()
     test = models.ForeignKey(Test, null=True, on_delete=models.SET_NULL)
     student_test = models.ForeignKey(StudentTest, null=True, on_delete=models.SET_NULL)
+
+    def save(self, *args, **kwargs):
+        if not self.publish_date:
+            self.publish_date = datetime.datetime.now().astimezone()
+        if self.test is not None:
+            if self.publish_date.date() != self.test.date:
+                self.publish_date = self.publish_date.replace(
+                    year=self.test.date.year, month=self.test.date.month, day=self.test.date.day,
+                )
+        if self.student_test is not None:
+            if self.publish_date.date() != self.student_test.date:
+                self.publish_date = self.publish_date.replace(
+                    year=self.student_test.date.year, month=self.student_test.date.month, day=self.student_test.date.day,
+                )
+        super(Grade, self).save(*args, **kwargs)
+        print("Saved", self.publish_date)
+
+    def short_str(self):
+        val = "✔" if self.value=="tick" else "✘" if self.value=="cross" else self.value
+        return f"{val}-{self.publish_date.strftime('%d-%m')}"
 
     def __str__(self):
         return f"{self.value}, poziom {self.skill_level.level}, typ {self.type} " \
