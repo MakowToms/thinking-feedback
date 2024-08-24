@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "bootstrap_modal_forms",
     "config",
     "by_student",
+    "all_tables",
     "classes",
     "grade",
     "student_view",
