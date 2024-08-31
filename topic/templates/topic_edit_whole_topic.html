@@ -1,77 +1,222 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1> {{ topic.title }} </h1>
-    <p><a href = '{{ topic.get_update_url }}'>Edit topic</a><br>
-        <a href = '{{ topic.get_delete_url}}'>Delete topic</a></p>
+{% comment %}Co-author KUBA{% endcomment %}
+{% comment %}KUBA: zmiana stylu{% endcomment %}
+<style>
 
+  .outer-table th, .outer-table td {
+    border: 1px solid #6fa0f2;
+    padding: 0px;
+    vertical-align: top;
+    min-width: 200px;
+  }
+  .inner-table td, .edit-section td {
+    border: none;
+    padding: 8px;
+  }
+
+
+  .inner-table{
+      min-width: 100px;
+  }
+
+  .inner-table tr{
+      display: flex;
+  }
+
+  .edit-section{
+      min-width: 40px;
+  }
+
+
+
+  th {
+    background-color: #6fa0f2;
+  }
+
+  .inner-table table, .edit-section table{
+    border: none;
+  }
+
+  .generators-section {
+    display: none;
+  }
+
+</style>
+
+    <h1> {{ topic.title }}
+        <button type="submit" class="btn btn-primary"
+            title="Edit topic"
+            onclick="window.location.href='{{ topic.get_update_url }}'">Edit topic</button>
+        <button type="submit" class="btn btn-danger"
+            title="Delete topic"
+            onclick="window.location.href='{{ topic.get_delete_url}}'">Delete topic</button>
+      <span style="margin-left: 100px;">
+        <button type="submit" class="btn btn-success"
+                title="Add a new skill"
+                onclick="window.location.href='{{ topic.get_add_skill_url }}'">Add a new skill</button>
+      </span>
+    </h1>
+
+    <div class="outer-table">
     <table>
       <tr>
         <th>Umiejętność</th>
-        <th>_____Podstawowa_____</th>
+        <th>Podstawowa</th>
         <th>Średniozaawansowana</th>
-        <th>_____Zaawansowana_____</th>
+        <th>Zaawansowana</th>
         <th>Edytuj</th>
       </tr>
       {% for skill, levels in skills %}
         <tr>
           <td>{{ skill.title }} ({{ skill.required_passes }})</td>
-          {% for level_container in levels %}
-          <td class="inner-table">
-            <table>
-              <tr>
-                {% for level in level_container %}
+                {% for level in levels %}
+                  {% if level is None %}
+                    <td>
+                      <button type="submit" class="btn btn-success"
+                              title="Add skill level for {{ skill.title }}"
+                              onclick="window.location.href='{{ skill.get_add_skill_level_url }}{{ forloop.counter }}/'"> Add skill level for {{ skill.title }}</button>
+                    </td>
+                  {% else %}
                   <td>
-                    {{ level.description }} ({{ level.required_passes }})
-                    <a href = '{{ level.get_add_skill_to_skill_level_url }}'> Add skill</a>
-                    <a href = '{{ level.get_edit_url }}'> Edit</a>
-                    <a href = '{{ level.get_delete_url }}'> Delete</a>
-                    <a href = '{{ level.get_add_task_url }}'> Add task</a>
-                    <a href = '{{ level.get_add_generator_url }}'> Add generator</a>
+                    {{ level.description }} ({{ level.required_passes }})<br>
+                    <span>
+                        {% comment %}KUBA: Dodanie przycisków zamiast linków, jako że przyciski są podobne to po njaechaniu wyświetla się komunikat o funkcji przycisku{% endcomment %}
+                        <button type="submit" class="btn btn-success grade-btn"
+                                title="Add skill {{ skill.title }}"
+                                onclick="window.location.href='{{ level.get_add_skill_to_skill_level_url }}'">+</button>
+                        <button type="submit" class="btn btn-primary grade-btn"
+                                title="Edit {{ skill.title }}"
+                                onclick="window.location.href='{{ level.get_edit_url }}'">EDT</button>
+                        <button type="submit" class="btn btn-danger grade-btn"
+                                title="Delete {{ skill.title }}"
+                                onclick="window.location.href='{{ level.get_delete_url }}'">DEL</button>
+                    </span><br><br>
+                    Example task:<br>
                     {{ level.example_task.content }}
-                    <a href = '{{ level.example_task.get_edit_url }}'> Edit</a>
-                    <a href = '{{ level.example_task.get_delete_url }}'> Delete</a>
-                    Tasks:
+                    <span>
+                        <button type="submit" class="btn btn-primary grade-btn"
+                                title="Edit"
+                                onclick="window.location.href='{{ level.example_task.get_edit_url }}'">EDT</button>
+                        <button type="submit" class="btn btn-danger grade-btn"
+                                title="Delete"
+                                onclick="window.location.href='{{ level.example_task.get_delete_url }}'">DEL</button>
+                    </span>
+                    <br>Tasks:
+                      <span>
+                        <button type="submit" class="btn btn-success grade-btn"
+                                title="Add task"
+                                onclick="window.location.href='{{ level.get_add_task_url }}'">+</button>
+                      </span>
+                      <ol>
                       {% for task in level.tasks.all %}
                         <li>
-                          {{ task.source }}
-                          <a href = '{{ task.get_edit_url }}'> Edit</a>
-                          <a href = '{{ task.get_delete_url }}'> Delete</a>
+                          {{ task.source }}<br>
+                          <span>
+                              <button type="submit" class="btn btn-primary grade-btn"
+                                    title="Edit"
+                                    onclick="window.location.href='{{ task.get_edit_url }}'">EDT
+                              </button>
+                               <button type="submit" class="btn btn-danger grade-btn"
+                                    title="Delete"
+                                    onclick="window.location.href='{{ task.get_delete_url }}'">DEL
+                               </button>
+                        </span>
                         </li>
                       {% endfor %}
+                      </ol>
+                    <br>
+                    {% comment %}KUBA: generatory wyświetlone dopiero po wciśnięciu przycisku Generators, żeby zajmowały mniej miejsca{% endcomment %}
                     Generators:
+                    <span>
+                      <button type="submit" class="btn btn-success grade-btn"
+                              title="Add generator"
+                              onclick="window.location.href='{{ level.get_add_generator_url }}'">+</button>
+                    </span>
+                      <ol>
                       {% for generator in level.generators.all %}
                         <li>
-                          {{ generator.code }}
-                          <a href = '{{ generator.get_edit_url }}'> Edit</a>
-                          <a href = '{{ generator.get_delete_url }}'> Delete</a>
+                          <span title="{{ generator.code }}">...{{ generator.code|slice:"50:100" }}{% if generator.code|length > 100 %}...{% endif %}</span><br>
+                          <button type="submit" class="btn btn-primary grade-btn"
+                                title="Edit"
+                                onclick="window.location.href='{{ generator.get_edit_url }}'">EDT</button>
+                          <button type="submit" class="btn btn-danger grade-btn"
+                                title="Delete"
+                                onclick="window.location.href='{{ generator.get_delete_url }}'">DEL</button>
                         </li>
                       {% endfor %}
+                      </ol>
                   </td>
+                  {% endif %}
                 {% endfor %}
-              </tr>
-            </table>
-          </td>
-          {% endfor %}
-          <td class="inner-table">
-            <table>
-              <tr>
-{#                <td><a href = '{{ skill.get_absolute_url }}'> Add grades: {{ skill.title }}</a></td>#}
-                <td><a href = '{{ skill.get_add_skill_level_url }}'> Add skill level for {{ skill.title }}</a></td>
-                <td><a href = '{{ skill.get_edit_url }}'> Edit {{ skill.title }}</a></td>
-                <td><a href = '{{ skill.get_delete_url }}'> Delete {{ skill.title }}</a></td>
-                <td><a href = '{{ skill.get_change_skill_order_url }}up/'> Up {{ skill.title }}</a></td>
-                <td><a href = '{{ skill.get_change_skill_order_url }}down/'> Down {{ skill.title }}</a></td>
-              </tr>
-            </table>
+          <td>
+            <div class="edit-section">
+                <table>
+                    <tr>
+                        <td>
+                            <button type="submit" class="btn btn-success"
+                                    title="Add skill level for {{ skill.title }}"
+                                    onclick="window.location.href='{{ skill.get_add_skill_level_url }}1/'"> Add skill level </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="submit" class="btn btn-primary"
+                                    title="Edit {{ skill.title }}"
+                                    onclick="window.location.href='{{ skill.get_edit_url }}'"> Edit skill</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="submit" class="btn btn-danger"
+                                    title="Delete {{ skill.title }}"
+                                    onclick="window.location.href='{{ skill.get_delete_url }}'">Delete skill</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="submit" class="btn btn-warning"
+                                    title="Order up"
+                                    onclick="window.location.href='{{ skill.get_change_skill_order_url }}up/'">Order up ↑</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="submit" class="btn btn-warning"
+                                    title="Order down"
+                                    onclick="window.location.href='{{ skill.get_change_skill_order_url }}down/'">Order down ↓</button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
           </td>
         </tr>
       {% endfor %}
     </table>
+    </div>
 
     {% if empty %}
         Oh no! It seems that you have no skills in this topic currently.<br>
     {% endif %}
     <br>
-    <p><a href = '{{ topic.get_add_skill_url }}'>Add a new skill</a></p>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var generatorLinks = document.querySelectorAll('.generators-link');
+            generatorLinks.forEach(function(link) {
+                var generatorsSection = link.nextElementSibling;
+                generatorsSection.style.display = 'none';
+
+                link.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    if (generatorsSection.style.display === 'block') {
+                        generatorsSection.style.display = 'none';
+                    } else {
+                        generatorsSection.style.display = 'block';
+                    }
+                });
+            });
+        });
+    </script>
 {% endblock %}

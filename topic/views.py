@@ -41,9 +41,9 @@ def topic_edit_whole_topic_view(request, pk):
     skills = []
     for skill in skill_objects:
         levels = [
-            skill.levels.filter(level__startswith="1").all(),
-            skill.levels.filter(level__startswith="2").all(),
-            skill.levels.filter(level__startswith="3").all(),
+            skill.levels.filter(level__startswith="1").first(),
+            skill.levels.filter(level__startswith="2").first(),
+            skill.levels.filter(level__startswith="3").first(),
         ]
         skills.append((skill, levels))
     template_name = "topic_edit_whole_topic.html"
@@ -159,15 +159,16 @@ def add_skill(request, pk):
 
 
 @staff_member_required
-def add_skill_level(request, pk1, pk2):
-    form = SkillLevelModelForm(request.POST or None)
+def add_skill_level(request, pk1, pk2, level):
+    skill = get_object_or_404(Skill, pk=pk2)
+    form = SkillLevelModelForm(skill, level, request.POST or None)
     if form.is_valid():
         skill_level = form.save(commit=False)
         skill = get_object_or_404(Skill, pk=pk2)
         skill_level.save()
         skill_level.skills.add(skill)
         skill_level.save()
-        return redirect("../../..")
+        return redirect("../../../..")
     template_name = "form.html"
     context = {"form": form}
     return render(request, template_name, context)
