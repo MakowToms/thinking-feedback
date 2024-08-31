@@ -38,26 +38,30 @@ class Topic(models.Model):
 class Skill(models.Model):
     title = models.CharField(max_length=120)
     topic = models.ForeignKey(Topic, default=1, on_delete=models.CASCADE)
-    required_passes = models.IntegerField(default=1)
+    required_passes = models.IntegerField(default=2)
     order = models.IntegerField()
+    # TODO: think, whether add individual levels
+    # level1 = models.ForeignKey("SkillLevel", on_delete=models.CASCADE, null=True)
+    # level2 = models.ForeignKey("SkillLevel", on_delete=models.CASCADE, null=True)
+    # level3 = models.ForeignKey("SkillLevel", on_delete=models.CASCADE, null=True)
 
     def get_absolute_url(self):
-        return f"/topic/{self.topic.pk}/skill/{self.pk}"
+        return f"/topic/{self.topic.pk}/skill/{self.pk}/"
 
     def get_edit_url(self):
-        return f"/topic/{self.topic.pk}/skill/{self.pk}/edit"
+        return f"/topic/{self.topic.pk}/skill/{self.pk}/edit/"
 
     def get_delete_url(self):
-        return f"/topic/{self.topic.pk}/skill/{self.pk}/delete"
+        return f"/topic/{self.topic.pk}/skill/{self.pk}/delete/"
 
     def get_grade_edit_url(self):
-        return f"/topic/{self.topic.pk}/skill/{self.pk}/grade_edit"
+        return f"/topic/{self.topic.pk}/skill/{self.pk}/grade_edit/"
 
     def get_grade_delete_url(self):
-        return f"/topic/{self.topic.pk}/skill/{self.pk}/grade_delete"
+        return f"/topic/{self.topic.pk}/skill/{self.pk}/grade_delete/"
 
     def get_add_skill_level_url(self):
-        return f"/topic/{self.topic.pk}/skill/{self.pk}/add_skill_level"
+        return f"/topic/{self.topic.pk}/skill/{self.pk}/add_skill_level/"
 
     def get_change_skill_order_url(self):
         return f"/topic/{self.topic.pk}/skill/{self.pk}/change_order/"
@@ -82,22 +86,22 @@ class SkillLevel(models.Model):
     example_task = models.ForeignKey(Task, default=None, null=True, on_delete=models.SET_DEFAULT)
     tasks = models.ManyToManyField(Task, related_name="skill_levels")
     generators = models.ManyToManyField(TaskGenerator, related_name="skill_levels")
-    required_passes = models.IntegerField(default=1)
+    required_passes = models.IntegerField(default=2)
 
     def get_add_skill_to_skill_level_url(self):
-        return f"/topic/{self.skills.all()[0].topic.pk}/skill_level/{self.pk}/add_skill_to_skill_level"
+        return f"/topic/{self.skills.all()[0].topic.pk}/skill_level/{self.pk}/add_skill_to_skill_level/"
 
     def get_edit_url(self):
-        return f"/topic/{self.skills.all()[0].topic.pk}/skill_level/{self.pk}/edit"
+        return f"/topic/{self.skills.all()[0].topic.pk}/skill_level/{self.pk}/edit/"
 
     def get_delete_url(self):
-        return f"/topic/{self.skills.all()[0].topic.pk}/skill_level/{self.pk}/delete"
+        return f"/topic/{self.skills.all()[0].topic.pk}/skill_level/{self.pk}/delete/"
 
     def get_add_task_url(self):
-        return f"/topic/{self.skills.all()[0].topic.pk}/skill_level/{self.pk}/task/add"
+        return f"/topic/{self.skills.all()[0].topic.pk}/skill_level/{self.pk}/task/add/"
 
     def get_add_generator_url(self):
-        return f"/topic/{self.skills.all()[0].topic.pk}/skill_level/{self.pk}/generator/add"
+        return f"/topic/{self.skills.all()[0].topic.pk}/skill_level/{self.pk}/generator/add/"
 
     def __str__(self):
         return f"{self.level} {self.description} {[skill.title for skill in self.skills.all()]}"

@@ -34,3 +34,10 @@ class SkillLevelModelForm(forms.ModelForm):
     class Meta:
         model = SkillLevel
         fields = ["level", "description", "required_passes"]
+
+    def __init__(self, skill, level=None, *args, **kwargs):
+        super(SkillLevelModelForm, self).__init__(*args, **kwargs)
+        if not self.instance.pk:  # If it's a new instance (not being edited)
+            self.fields['required_passes'].initial = skill.required_passes
+            if level is not None:
+                self.fields['level'].initial = level

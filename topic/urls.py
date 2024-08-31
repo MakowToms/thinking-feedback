@@ -14,7 +14,7 @@ urlpatterns = [
     path("<int:pk>/view/", topic_student_view),
     path("<int:pk1>/skill/<int:pk2>/edit/", update_skill),
     path("<int:pk1>/skill/<int:pk2>/delete/", delete_skill),
-    path("<int:pk1>/skill/<int:pk2>/add_skill_level/", add_skill_level),
+    path("<int:pk1>/skill/<int:pk2>/add_skill_level/<int:level>/", add_skill_level),
     path(
         "<int:pk1>/skill_level/<int:pk3>/add_skill_to_skill_level/",
         add_skill_to_skill_level,
