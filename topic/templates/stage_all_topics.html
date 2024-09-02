@@ -1,17 +1,49 @@
 {% extends "base.html" %}
 
 {% block content %}
-{% for stage, topic_stage in topics.items %}
-    <button title="Click to Show/Hide Content" type="button"
-            onclick="spoiler('stage-{{ stage }}')">{{ stage }}</button>
+<style>
+  .table th, .table td {
+    border: 1px solid #6fa0f2;
+    padding: 0px;
+    vertical-align: top;
+    min-width: 250px;
+  }
+  th {
+    background-color: #6fa0f2;
+  }
+</style>
 
-    <div id="stage-{{ stage }}" style="display:none">
-      {% for topic in topic_stage %}
-          <li>{{ topic.title }}  <a href='{{ topic.get_edit_whole_topic_url }}'>Edit</a>  <a href='{{ topic.get_student_view_url }}'>View</a></li>
-      {% endfor %}
-      <p><a href = '/topic/add/stage/{{ stage.pk }}'>Add a new topic</a></p>
-    </div>
-{% endfor %}
+<div class="table">
+<table>
+  <tr>
+    {% for stage, topic_stage in topics.items %}
+      <th>{{ stage }}</th>
+    {% endfor %}
+  </tr>
+  <tr>
+    {% for stage, topic_stage in topics.items %}
+      <td>
+        <div id="stage-{{ stage }}">
+          <ol>
+            {% for topic in topic_stage %}
+                <li>
+                  {{ topic.title|slice:":20" }}{% if topic.title|length > 20 %}...{% endif %}
+                  <button type="submit" class="btn btn-primary grade-btn"
+                          title="Edit {{ topic.title }}"
+                          onclick="window.location.href='{{ topic.get_edit_whole_topic_url }}'">EDT</button>
+                  <button type="submit" class="btn btn-warning"
+                          title="View {{ topic.title }}"
+                          onclick="window.location.href='{{ topic.get_student_view_url }}'">VIEW</button>
+                </li>
+            {% endfor %}
+            <p><a href = '/topic/add/stage/{{ stage.pk }}'>Add a new topic</a></p>
+          </ol>
+        </div>
+      </td>
+    {% endfor %}
+  </tr>
+</table>
+</div>
 {% if empty %}
     Oh! It seems that you need to add classes ('Your classes' section) to be able to add new topics.<br>
 {% endif %}
