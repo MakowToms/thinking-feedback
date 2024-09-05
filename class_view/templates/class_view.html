@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+  .table th, .table td {
+    border: 1px solid #6fa0f2;
+    padding: 0;
+    vertical-align: top;
+    min-width: 250px;
+  }
+  .inner-table th, .inner-table td {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    vertical-align: top;
+    min-width: 30px;
+  }
+  .inner-table tr:nth-child(even) {background: #CCC}
+  .inner-table tr:nth-child(odd) {background: #FFF}
+  th {
+    background-color: #6fa0f2;
+  }
+</style>
+
+<div class="table">
+{#TODO: dodaj inne oceny w tym widoku#}
+<table>
+  <tr>
+    <th>Tabelki</th>
+    <th>Testy</th>
+    <th>Poprawy</th>
+    <th>Oceny studentów</th>
+    <th>Oceny działów</th>
+  </tr>
+  <tr>
+    <td>
+      <div id="all-topics">
+        <table class="inner-table">
+          {% for topic in topics %}
+            <tr>
+              <td>
+                {{ topic.title|slice:":20" }}{% if topic.title|length > 20 %}...{% endif %}
+              </td>
+              <td>
+                <button type="submit" class="btn btn-primary grade-btn"
+                        title="Edit {{ topic.title }}"
+                        onclick="window.location.href='{{ topic.get_edit_whole_topic_url }}'">EDT</button>
+              </td>
+              <td>
+                <button type="submit" class="btn btn-warning"
+                        title="View {{ topic.title }}"
+                        onclick="window.location.href='{{ topic.get_student_view_url }}'">VIEW</button>
+              </td>
+            </tr>
+          {% endfor %}
+        </table>
+        <p><a href = ''>Add new student test (not working)</a></p>
+      </div>
+    </td>
+    <td>
+      <div id="all-tests">
+        <table class="inner-table">
+          {% for test in tests %}
+            <tr>
+              <td>
+                {{ test.name|slice:":20" }}{% if test.name|length > 20 %}...{% endif %}
+              </td>
+              <td>
+                {{ test.date.day }}.{{ test.date.month }}
+              </td>
+              <td>
+              <button type="submit" class="btn btn-primary grade-btn"
+                      title="Edit {{ test.name }}"
+                      onclick="window.location.href='{{ test.get_manage_url }}'"> EDT </button>
+              </td>
+              <td>
+              <button type="submit" class="btn btn-warning"
+                      title="Generate view of {{ test.name }}"
+                      onclick="window.location.href='{{ test.get_generate_url }}'">GEN</button>
+              </td>
+              <td>
+              <button type="submit" class="btn btn-danger"
+                      title="Generate and copy {{ test.name }}"
+                      onclick="generateTest('{{ test.pk }}')">COP</button>
+              </td>
+              <td>
+              <button type="submit" class="btn btn-success"
+                      title="Add grades {{ test.name }}"
+                      onclick="window.location.href='{{ test.get_grade_url }}'">GRD</button>
+              </td>
+            </tr>
+          {% endfor %}
+        </table>
+        <p><a href = ''>Add new test (not working)</a></p>
+      </div>
+    </td>
+    <td>
+      <div id="all-student-tests">
+        <table class="inner-table">
+          {% for student_test in student_tests %}
+            <tr>
+              <td>
+                {{ student_test.name|slice:":20" }}{% if student_test.name|length > 20 %}...{% endif %}
+              </td>
+              <td>
+                <button type="submit" class="btn btn-primary grade-btn"
+                        title="Edit {{ student_test.name }}"
+                        onclick="window.location.href='{{ student_test.get_manage_url }}'"> EDT </button>
+              </td>
+              <td>
+                <button type="submit" class="btn btn-warning"
+                        title="View {{ student_test.name }}"
+                        onclick="window.location.href='{{ student_test.get_generate_url }}'">GEN</button>
+              </td>
+            </tr>
+          {% endfor %}
+        </table>
+        <p><a href = ''>Add new student test (not working)</a></p>
+      </div>
+    </td>
+  </tr>
+</table>
+</div>
+
+<script type="text/javascript">
+
+var generateTest = function(test_id) {
+    var data = new FormData();
+    data.append("test_id", test_id);
+    var xhr = new XMLHttpRequest();
+    xhr.withCredentials = true;
+
+    xhr.addEventListener("readystatechange", function() {
+      if (xhr.readyState === XMLHttpRequest.DONE) {
+        var response = JSON.parse(xhr.responseText);
+        if (response.success) {
+          navigator.clipboard.writeText(response.test_str);
+        }
+      }
+    })
+
+    xhr.open("POST", "http://127.0.0.1:8080/test/api/generate/");
+    xhr.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
+    xhr.send(data);
+}
+
+</script>
+{% endblock %}

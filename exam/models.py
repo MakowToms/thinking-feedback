@@ -30,7 +30,13 @@ class Test(models.Model):
     date = models.DateField()
 
     def get_manage_url(self):
-        return f"/test/{self.pk}/manage"
+        return f"/test/{self.pk}/manage/"
+
+    def get_generate_url(self):
+        return f"/test/{self.pk}/generate/"
+
+    def get_grade_url(self):
+        return f"/grade/test/{self.pk}/"
 
     def __str__(self):
         return self.name
@@ -46,7 +52,10 @@ class StudentTest(models.Model):
     write_student_name = models.BooleanField(default=True)
 
     def get_manage_url(self):
-        return f"/test/student/{self.pk}/manage"
+        return f"/test/student/{self.pk}/manage/"
+
+    def get_generate_url(self):
+        return f"/test/student/{self.pk}/generate/"
 
     def __str__(self):
         return self.name

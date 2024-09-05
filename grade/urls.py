@@ -1,11 +1,13 @@
 from django.urls import path
 
 from grade import views
-from grade.views import add_grade, delete_grade, skill_grade_edit, skill_grade_edit_next, skill_grade_delete, skill_grade_delete_next, \
-    choose_topic_students, choose_test, choose_stage, choose_student_test
+from grade.views import add_grade, delete_grade, skill_grade_edit, skill_grade_edit_next, skill_grade_delete, \
+    skill_grade_delete_next, \
+    choose_topic_students, choose_test, choose_stage, choose_student_test, choose_test_by_id
 
 urlpatterns = [
     path("", choose_stage),
+    path("test/<int:test_id>/", choose_test_by_id),
     path("stage/<int:pk>/topic/", choose_topic_students),
     path("stage/<int:pk>/test/", choose_test),
     path("stage/<int:pk>/student_test/", choose_student_test),

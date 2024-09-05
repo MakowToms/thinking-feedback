@@ -20,6 +20,17 @@
                 <!-- <li class="navbar-toggle" data-toggle="collapse"> -->
                 <a class="nav-link active" href="/topic">Edit tables</a>
               </li>
+              {% for stage in stages %}
+                {% if chosen_stage == stage.pk %}
+                  <li class="nav-item" style="background-color: red">
+                    <a class="nav-link active" href="/class/{{ stage.pk }}">{{ stage }}</a>
+                  </li>
+                {% else %}
+                  <li class="nav-item">
+                    <a class="nav-link active" href="/class/{{ stage.pk }}">{{ stage }}</a>
+                  </li>
+                {% endif %}
+              {% endfor %}
               <li class="nav-item">
                 <!-- <li class="navbar-toggle" data-toggle="collapse"> -->
                 <a class="nav-link active" href="/grade">Add grades</a>
