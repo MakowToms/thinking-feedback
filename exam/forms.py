@@ -70,3 +70,7 @@ class StudentTestForm(forms.ModelForm):
                 for topic, skill_levels in sorted(topic_to_skill_levels.items(), key=lambda k: k[0].pk)
             ]
             self.fields["skill_levels"].choices = topic_to_skill_levels_tuples
+
+
+class TestGeneratorForm(forms.Form):
+    test_id = forms.IntegerField(required=False)

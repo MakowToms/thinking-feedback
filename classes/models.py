@@ -12,6 +12,7 @@ class Stage(models.Model):
     teacher = models.ForeignKey(User, default=1, on_delete=models.CASCADE)
     number = models.IntegerField(null=True, blank=True)
     students = models.ManyToManyField(User, related_name="classes")
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.title

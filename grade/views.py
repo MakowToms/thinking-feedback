@@ -7,6 +7,7 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
 from classes.models import Stage
+from exam.models import Test
 from grade.forms import StageTopicsStudentsForm, GradeModelForm, GradeModalModelForm, StageTestForm, StageForm, \
     DeleteGradeForm, StageStudentTestForm
 from grade.models import Grade, MARK_CHOICES, TYPE_CHOICES
@@ -107,7 +108,7 @@ def choose_test(request, pk):
     if request.POST and form.is_valid():
         test = form.cleaned_data["test"]
         skills = test.skills.all()
-        students = stage.students.order_by('last_name').all()
+        students = stage.students.order_by("id").all()
         marks = MARK_CHOICES
         types = TYPE_CHOICES
         return add_grades(request, stage, students, marks, types, "test", skills=skills, test=test)
@@ -118,6 +119,16 @@ def choose_test(request, pk):
 
 
 @staff_member_required
+def choose_test_by_id(request, test_id):
+    test = get_object_or_404(Test, pk=test_id)
+    skills = test.skills.all()
+    students = test.stage.students.order_by("id").all()
+    marks = MARK_CHOICES
+    types = TYPE_CHOICES
+    return add_grades(request, test.stage, students, marks, types, "test", skills=skills, test=test)
+
+
+@staff_member_required
 def choose_student_test(request, pk):
     stage = get_object_or_404(Stage, pk=pk)
     form = StageStudentTestForm(stage, request.POST or None)
@@ -125,7 +136,7 @@ def choose_student_test(request, pk):
     if request.POST and form.is_valid():
         student_test = form.cleaned_data["student_test"]
         skill_levels = student_test.skill_levels.all()
-        students = stage.students.order_by('last_name').all()
+        students = stage.students.order_by("id").all()
         marks = MARK_CHOICES
         types = TYPE_CHOICES
         return add_grades(request, stage, students, marks, types, "student_test", skill_levels=skill_levels, student_test=student_test)

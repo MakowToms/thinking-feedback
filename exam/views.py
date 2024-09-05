@@ -3,9 +3,10 @@ from typing import List
 
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.models import User
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 
-from exam.forms import StageForm, TestForm, StudentTestForm
+from exam.forms import StageForm, TestForm, StudentTestForm, TestGeneratorForm
 from exam.generator import LatexCreator
 from exam.models import Test, StudentTest, ChoiceTestTask, TestTask
 from task.models import TaskGenerator
@@ -170,6 +171,17 @@ def generate_test(request, pk: int):
     answers_str = latex_creator.generate_tests(solution=True)
     context = {"test_str": test_str, "answers_str": answers_str}
     return render(request, template_name, context)
+
+
+@staff_member_required
+def generate_test_api(request):
+    form = TestGeneratorForm(request.POST or None)
+    if form.is_valid() and form.cleaned_data["test_id"] is not None:
+        test = get_object_or_404(Test, id=form.cleaned_data["test_id"])
+        latex_creator = LatexCreator(test)
+        test_str = latex_creator.generate_tests(solution=False)
+        return JsonResponse({"success": True, "test_str": test_str})
+    return JsonResponse({"success": False})
 
 
 @staff_member_required
